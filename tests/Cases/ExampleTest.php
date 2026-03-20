@@ -12,14 +12,29 @@ declare(strict_types=1);
 
 namespace HyperfTest\Cases;
 
+use Cloud\VideoParser\Client;
+use Hyperf\Codec\Json;
+
 /**
  * @internal
  * @coversNothing
  */
 class ExampleTest extends AbstractTestCase
 {
-    public function testExample()
+    public function testGetInfo()
     {
-        $this->assertTrue(true);
+        $samples = Json::decode(file_get_contents(__DIR__ . '/../../samples.json'));
+
+        $client = new Client();
+
+        foreach ($samples as $sample) {
+            $name = $sample['name'];
+            $url = $sample['url'];
+
+            $res = $client->info($url, $name);
+
+            $this->assertNotEmpty($res->width);
+            $this->assertNotEmpty($res->height);
+        }
     }
 }
