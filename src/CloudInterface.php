@@ -21,4 +21,6 @@ interface CloudInterface
     public function __construct(?LoggerInterface $logger = null);
 
     public function info(Uri $uri): Info;
+
+    public function coverUrl(Uri $uri): string;
 }

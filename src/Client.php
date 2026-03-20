@@ -62,4 +62,14 @@ class Client
 
         return $client->info(new Uri($url));
     }
+
+    public function coverUrl(string $url, string $cloud): string
+    {
+        $client = $this->clouds[$cloud] ?? null;
+        if (! $client) {
+            throw new RuntimeException(sprintf('%s not found', $cloud));
+        }
+
+        return $client->coverUrl(new Uri($url));
+    }
 }

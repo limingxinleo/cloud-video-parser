@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Cloud\VideoParser\Schema;
 
-class Info
+use JsonSerializable;
+
+class Info implements JsonSerializable
 {
     public function __construct(
         public int $width,
@@ -22,5 +24,16 @@ class Info
         public string $duration,
         public array $rawData,
     ) {
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'width' => $this->width,
+            'height' => $this->height,
+            'size' => $this->size,
+            'fps' => $this->fps,
+            'duration' => $this->duration,
+        ];
     }
 }

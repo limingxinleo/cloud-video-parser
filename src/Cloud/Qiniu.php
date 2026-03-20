@@ -56,4 +56,9 @@ class Qiniu implements CloudInterface
             $res
         );
     }
+
+    public function coverUrl(Uri $uri): string
+    {
+        return (string) $uri->withQuery('vframe/jpg/offset/0');
+    }
 }
