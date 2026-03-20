@@ -14,7 +14,6 @@ namespace Cloud\VideoParser\Cloud;
 
 use Cloud\VideoParser\CloudInterface;
 use Cloud\VideoParser\CoverUrlBuilder;
-use Cloud\VideoParser\Exception\InvalidVideoException;
 use Cloud\VideoParser\Schema\Info;
 use GuzzleHttp\Client;
 use Hyperf\Codec\Json;
