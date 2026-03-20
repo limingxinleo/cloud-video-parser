@@ -43,10 +43,6 @@ class Qiniu implements CloudInterface
         }
 
         $res = Json::decode($body);
-        if (empty($res['streams'][0])) {
-            $this->logger?->error(Json::encode(['id' => 'info_error', 'url' => (string) $uri, 'data' => $res]));
-            throw new InvalidVideoException();
-        }
 
         $width = $res['streams'][0]['width'] ?? ($res['streams'][1]['width'] ?? 0); // 七牛云的视频元信息顺序不定
         $height = $res['streams'][0]['height'] ?? ($res['streams'][1]['height'] ?? 0);
