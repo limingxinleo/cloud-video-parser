@@ -7,14 +7,18 @@ on:
 name: Release
 
 jobs:
-  release:
-    name: Release
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Create Release
-        id: create_release
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get the version
+        id: get_version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+
+      - name: Release
         uses: softprops/action-gh-release@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
