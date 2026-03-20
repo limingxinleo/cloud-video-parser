@@ -35,21 +35,25 @@ class Qiniu implements CloudInterface
 
         $body = (string) (new Client())->get((string) $uri)->getBody();
 
-        $result = Json::decode($body);
-        if (empty($result['streams'][0])) {
-            $this->logger?->error(Json::encode(['id' => 'info_error', 'url' => (string) $uri, 'exception' => $result]));
+        $res = Json::decode($body);
+        if (empty($res['streams'][0])) {
+            $this->logger?->error(Json::encode(['id' => 'info_error', 'url' => (string) $uri, 'data' => $res]));
             throw new InvalidVideoException();
         }
 
-        $stream = $result['streams'][0];
-        $rFrameRate = explode('/', $stream['r_frame_rate']);
+        $width = $res['streams'][0]['width'] ?? ($res['streams'][1]['width'] ?? 0); // 七牛云的视频元信息顺序不定
+        $height = $res['streams'][0]['height'] ?? ($res['streams'][1]['height'] ?? 0);
+        $nbFrames = $res['streams'][0]['nb_frames'] ?? ($res['streams'][1]['nb_frames'] ?? 0);
+        $size = $res['format']['size'] ?? 0;
+        $duration = $res['format']['duration'] ?? 0;
 
         return new Info(
-            $stream['width'],
-            $stream['height'],
-            (int) round((float) bcdiv($rFrameRate[0], $rFrameRate[1], 2)),
-            $stream['duration'],
-            $result
+            (int) $width,
+            (int) $height,
+            (int) $size,
+            (int) ($nbFrames / $duration),
+            (string) $duration,
+            $res
         );
     }
 }

@@ -17,6 +17,7 @@ class Info
     public function __construct(
         public int $width,
         public int $height,
+        public int $size,
         public int $fps,
         public string $duration,
         public array $rawData,
