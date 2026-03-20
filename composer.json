@@ -9,7 +9,7 @@
     "description": "",
     "autoload": {
         "psr-4": {
-            "Cloud\\\\VideoParser\\": "src/"
+            "Cloud\\VideoParser\\": "src/"
         }
     },
     "autoload-dev": {
@@ -43,7 +43,7 @@
     },
     "extra": {
         "hyperf": {
-            "config": "Cloud\\\\VideoParser\\ConfigProvider"
+            "config": "Cloud\\VideoParser\\ConfigProvider"
         }
     }
 }
