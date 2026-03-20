@@ -35,7 +35,7 @@ class Qiniu implements CloudInterface
         $uri = $uri->withQuery('avinfo');
 
         try {
-            $body = (string) (new Client())->get((string) $uri)->getBody();
+            $body = (string) $this->httpClient()->get((string) $uri)->getBody();
         } catch (Throwable $exception) {
             $this->logger?->error(Json::encode(['id' => 'info_error', 'url' => (string) $uri, 'exception' => $exception]));
             throw $exception;
@@ -71,5 +71,13 @@ class Qiniu implements CloudInterface
         }
 
         return (string) $uri->withQuery($query);
+    }
+
+    protected function httpClient(): Client
+    {
+        return new Client([
+            'timeout' => 5,
+            'connect_timeout' => 2,
+        ]);
     }
 }
