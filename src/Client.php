@@ -53,8 +53,12 @@ class Client
         }
     }
 
-    public function info(string $url, string $cloud): Info
+    public function info(string $url, Cloud|string $cloud): Info
     {
+        if ($cloud instanceof Cloud) {
+            $cloud = $cloud->value;
+        }
+
         $client = $this->clouds[$cloud] ?? null;
         if (! $client) {
             throw new RuntimeException(sprintf('%s not found', $cloud));
@@ -63,8 +67,12 @@ class Client
         return $client->info(new Uri($url));
     }
 
-    public function coverUrl(string $url, string $cloud): string
+    public function coverUrl(string $url, Cloud|string $cloud): string
     {
+        if ($cloud instanceof Cloud) {
+            $cloud = $cloud->value;
+        }
+
         $client = $this->clouds[$cloud] ?? null;
         if (! $client) {
             throw new RuntimeException(sprintf('%s not found', $cloud));
