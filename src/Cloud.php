@@ -14,5 +14,5 @@ namespace Cloud\VideoParser;
 
 enum Cloud: string
 {
-    case QiNiu = 'qiniu';
+    case Qiniu = 'qiniu';
 }
