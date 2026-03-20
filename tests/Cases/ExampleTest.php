@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace HyperfTest\Cases;
 
 use Cloud\VideoParser\Client;
+use Cloud\VideoParser\CoverUrlBuilder;
 use Hyperf\Codec\Json;
 
 /**
@@ -58,5 +59,14 @@ class ExampleTest extends AbstractTestCase
 
             $this->assertTrue(str_starts_with($mimeType, 'image/'));
         }
+    }
+
+    public function testCoverUrlBuilder()
+    {
+        $client = new Client();
+
+        $res = $client->coverUrl('https://xxxx.xxx.com', 'qiniu', CoverUrlBuilder::create()->resize(100, 100));
+
+        $this->assertSame('https://xxxx.xxx.com?vframe/jpg/offset/0/w/100/h/100', $res);
     }
 }

@@ -22,5 +22,5 @@ interface CloudInterface
 
     public function info(Uri $uri): Info;
 
-    public function coverUrl(Uri $uri): string;
+    public function coverUrl(Uri $uri, ?CoverUrlBuilder $builder = null): string;
 }

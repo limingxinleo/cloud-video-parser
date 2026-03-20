@@ -67,7 +67,7 @@ class Client
         return $client->info(new Uri($url));
     }
 
-    public function coverUrl(string $url, Cloud|string $cloud): string
+    public function coverUrl(string $url, Cloud|string $cloud, ?CoverUrlBuilder $builder = null): string
     {
         if ($cloud instanceof Cloud) {
             $cloud = $cloud->value;
@@ -78,6 +78,6 @@ class Client
             throw new RuntimeException(sprintf('%s not found', $cloud));
         }
 
-        return $client->coverUrl(new Uri($url));
+        return $client->coverUrl(new Uri($url), $builder);
     }
 }

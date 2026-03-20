@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Cloud\VideoParser\Cloud;
 
 use Cloud\VideoParser\CloudInterface;
+use Cloud\VideoParser\CoverUrlBuilder;
 use Cloud\VideoParser\Exception\InvalidVideoException;
 use Cloud\VideoParser\Schema\Info;
 use GuzzleHttp\Client;
@@ -57,8 +58,17 @@ class Qiniu implements CloudInterface
         );
     }
 
-    public function coverUrl(Uri $uri): string
+    public function coverUrl(Uri $uri, ?CoverUrlBuilder $builder = null): string
     {
-        return (string) $uri->withQuery('vframe/jpg/offset/0');
+        $query = 'vframe/jpg/offset/0';
+        if ($builder?->width !== null) {
+            $query .= '/w/' . $builder->width;
+        }
+
+        if ($builder?->height !== null) {
+            $query .= '/h/' . $builder->height;
+        }
+
+        return (string) $uri->withQuery($query);
     }
 }
