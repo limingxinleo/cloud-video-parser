@@ -20,6 +20,7 @@ use GuzzleHttp\Client;
 use Hyperf\Codec\Json;
 use Hyperf\HttpMessage\Uri\Uri;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 class Qiniu implements CloudInterface
 {
@@ -34,7 +35,12 @@ class Qiniu implements CloudInterface
     {
         $uri = $uri->withQuery('avinfo');
 
-        $body = (string) (new Client())->get((string) $uri)->getBody();
+        try {
+            $body = (string) (new Client())->get((string) $uri)->getBody();
+        } catch (Throwable $exception) {
+            $this->logger?->error(Json::encode(['id' => 'info_error', 'url' => (string) $uri, 'exception' => $exception]));
+            throw $exception;
+        }
 
         $res = Json::decode($body);
         if (empty($res['streams'][0])) {
