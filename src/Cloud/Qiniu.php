@@ -14,6 +14,7 @@ namespace Cloud\VideoParser\Cloud;
 
 use Cloud\VideoParser\CloudInterface;
 use Cloud\VideoParser\CoverUrlBuilder;
+use Cloud\VideoParser\HttpClient;
 use Cloud\VideoParser\Schema\Info;
 use GuzzleHttp\Client;
 use Hyperf\Codec\Json;
@@ -23,11 +24,11 @@ use Throwable;
 
 class Qiniu implements CloudInterface
 {
-    protected ?LoggerInterface $logger = null;
+    protected HttpClient $httpClient;
 
-    public function __construct(?LoggerInterface $logger = null)
+    public function __construct(protected ?LoggerInterface $logger = null, ?HttpClient $httpClient = null)
     {
-        $this->logger = $logger;
+        $this->httpClient = $httpClient ?? new HttpClient();
     }
 
     public function info(Uri $uri): Info
@@ -35,7 +36,7 @@ class Qiniu implements CloudInterface
         $uri = $uri->withQuery('avinfo');
 
         try {
-            $body = (string) $this->httpClient()->get((string) $uri)->getBody();
+            $body = (string) $this->httpClient->client()->get((string) $uri)->getBody();
         } catch (Throwable $exception) {
             $this->logger?->error(Json::encode(['id' => 'info_error', 'url' => (string) $uri, 'exception' => $exception]));
             throw $exception;
@@ -71,13 +72,5 @@ class Qiniu implements CloudInterface
         }
 
         return (string) $uri->withQuery($query);
-    }
-
-    protected function httpClient(): Client
-    {
-        return new Client([
-            'timeout' => 5,
-            'connect_timeout' => 2,
-        ]);
     }
 }

@@ -29,10 +29,13 @@ class Client
     public function __construct(
         array $clouds = [],
         public ?LoggerInterface $logger = null,
+        public ?HttpClient $httpClient = null,
     ) {
+        $this->httpClient ??= new HttpClient();
+
         $clouds = array_merge(
             [
-                'qiniu' => new Qiniu($this->logger),
+                'qiniu' => new Qiniu($this->logger, $this->httpClient),
             ],
             $clouds
         );
