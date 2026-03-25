@@ -26,7 +26,7 @@ class HttpClient
     {
         $this->config = array_merge(
             [
-                'timeout' => 30,
+                'timeout' => 10,
             ],
             $this->config
         );
@@ -46,9 +46,11 @@ class HttpClient
     public function getMiddleware(): callable
     {
         return Middleware::retry(function ($retries, RequestInterface $request, ?ResponseInterface $response = null) {
-            if (! $this->isOk($response) && $retries < 2) {
+            if (! $this->isOk($response) && $retries < 5) {
                 $this->logger->warning(Json::encode([
                     'key' => 'cloud_video_parser_http_execute_try_again',
+                    'uri' => (string) $request->getUri(),
+                    'retries' => $retries,
                 ]));
                 return true;
             }
