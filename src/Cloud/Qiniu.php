@@ -16,7 +16,6 @@ use Cloud\VideoParser\CloudInterface;
 use Cloud\VideoParser\CoverUrlBuilder;
 use Cloud\VideoParser\HttpClient;
 use Cloud\VideoParser\Schema\Info;
-use GuzzleHttp\Client;
 use Hyperf\Codec\Json;
 use Hyperf\HttpMessage\Uri\Uri;
 use Psr\Log\LoggerInterface;

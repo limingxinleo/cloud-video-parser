@@ -16,7 +16,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use Hyperf\Codec\Json;
-use Hyperf\Guzzle\MiddlewareInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
@@ -40,14 +39,14 @@ class HttpClient
 
         return new Client([
             'handler' => $stack,
-            ...$this->config
+            ...$this->config,
         ]);
     }
 
     public function getMiddleware(): callable
     {
         return Middleware::retry(function ($retries, RequestInterface $request, ?ResponseInterface $response = null) {
-            if (!$this->isOk($response) && $retries < 2) {
+            if (! $this->isOk($response) && $retries < 2) {
                 $this->logger->warning(Json::encode([
                     'key' => 'cloud_video_parser_http_execute_try_again',
                 ]));
