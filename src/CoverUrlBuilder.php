@@ -23,7 +23,7 @@ class CoverUrlBuilder
         return new static();
     }
 
-    public function resize(int $width, int $height): static
+    public function resize(?int $width = null, ?int $height = null): static
     {
         $this->width = $width;
         $this->height = $height;
