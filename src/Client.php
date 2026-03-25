@@ -31,7 +31,7 @@ class Client
         public ?LoggerInterface $logger = null,
         public ?HttpClient $httpClient = null,
     ) {
-        $this->httpClient ??= new HttpClient();
+        $this->httpClient ??= new HttpClient(logger: $logger);
 
         $clouds = array_merge(
             [

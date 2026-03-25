@@ -13,10 +13,17 @@ declare(strict_types=1);
 namespace Cloud\VideoParser;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use Hyperf\Codec\Json;
+use Hyperf\Guzzle\MiddlewareInterface;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class HttpClient
 {
-    public function __construct(public array $config = [])
+    public function __construct(public array $config = [], public ?LoggerInterface $logger = null)
     {
         $this->config = array_merge(
             [
@@ -28,6 +35,35 @@ class HttpClient
 
     public function client(): Client
     {
-        return new Client($this->config);
+        $stack = HandlerStack::create();
+        $stack->push($this->getMiddleware(), 'retry');
+
+        return new Client([
+            'handler' => $stack,
+            ...$this->config
+        ]);
+    }
+
+    public function getMiddleware(): callable
+    {
+        return Middleware::retry(function ($retries, RequestInterface $request, ?ResponseInterface $response = null) {
+            if (!$this->isOk($response) && $retries < 2) {
+                $this->logger->warning(Json::encode([
+                    'key' => 'cloud_video_parser_http_execute_try_again',
+                ]));
+                return true;
+            }
+            return false;
+        }, function () {
+            return 100;
+        });
+    }
+
+    /**
+     * Check the response status is correct.
+     */
+    protected function isOk(?ResponseInterface $response): bool
+    {
+        return $response && $response->getStatusCode() >= 200 && $response->getStatusCode() < 300;
     }
 }
