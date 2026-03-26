@@ -42,7 +42,7 @@ class Tencent implements CloudInterface
             throw $exception;
         }
 
-        $res = Xml::toArray($body);
+        $res = Xml::toArray($body)['MediaInfo'] ?? [];
 
         $width = $res['Stream']['Video']['Width'] ?? 0; // 七牛云的视频元信息顺序不定
         $height = $res['Stream']['Video']['Height'] ?? 0;
