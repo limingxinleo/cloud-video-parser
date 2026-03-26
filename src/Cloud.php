@@ -15,4 +15,5 @@ namespace Cloud\VideoParser;
 enum Cloud: string
 {
     case Qiniu = 'qiniu';
+    case Tencent = 'tencent';
 }

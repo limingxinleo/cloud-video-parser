@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Cloud\VideoParser;
 
 use Cloud\VideoParser\Cloud\Qiniu;
+use Cloud\VideoParser\Cloud\Tencent;
 use Cloud\VideoParser\Schema\Info;
 use Hyperf\HttpMessage\Uri\Uri;
 use InvalidArgumentException;
@@ -35,7 +36,8 @@ class Client
 
         $clouds = array_merge(
             [
-                'qiniu' => new Qiniu($this->logger, $this->httpClient),
+                Cloud::Qiniu->value => new Qiniu($this->logger, $this->httpClient),
+                Cloud::Tencent->value => new Tencent($this->logger, $this->httpClient),
             ],
             $clouds
         );

@@ -47,7 +47,7 @@ class HttpClient
     {
         return Middleware::retry(function ($retries, RequestInterface $request, ?ResponseInterface $response = null) {
             if (! $this->isOk($response) && $retries < 5) {
-                $this->logger->warning(Json::encode([
+                $this->logger?->warning(Json::encode([
                     'key' => 'cloud_video_parser_http_execute_try_again',
                     'uri' => (string) $request->getUri(),
                     'retries' => $retries,
